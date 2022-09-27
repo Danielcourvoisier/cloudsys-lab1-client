@@ -15,4 +15,6 @@ while True:
         print(response_API.status_code)
         data = response_API.text
         print(data)
+    except:
+        print("no connection")
     time.sleep(1)
