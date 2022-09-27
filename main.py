@@ -17,4 +17,5 @@ while True:
         print(data)
     except:
         print("no connection")
+        
     time.sleep(1)
