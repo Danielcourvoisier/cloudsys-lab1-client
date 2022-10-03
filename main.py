@@ -38,7 +38,7 @@ async def root():
             I get data from: 
             <a href="{server_url}">{server_url}</a>
             <p>
-            Here the data:
+            Here is the data:
             <p>
             {data}
             <p>
