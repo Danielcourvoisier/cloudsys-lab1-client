@@ -1,21 +1,52 @@
-# Dependancies
 import os
-import time
 import requests
 import json
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 
 # Get env variable to get IP of server
-server_addr = os.environ["CLOUDSYS_SERVER_IP"]
+server_addr = os.environ["SERVER_IP"]
+server_port = os.environ["SERVER_PORT"]
+server_url_data = f"http://{server_addr}:{server_port}/data"
+app_port = os.environ["APP_PORT"]
 
-print(f"Server address is : {server_addr}")
 
-while True:
+app = FastAPI()
+
+
+# root
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    # request data to server
     try:
-        response_API = requests.get(f"http://{server_addr}")
-        print(response_API.status_code)
-        data = response_API.text
-        print(data)
+        response = requests.get(server_url_data)
+        print(response.status_code)
+        data = response.text
     except:
-        print("no connection")
-        
-    time.sleep(1)
+        data = "Error retrieving data"
+
+    return """
+    <html>
+        <head>
+            <title>CloudSys Lab1</title>
+        </head>
+        <body>
+            <h1>Hey, you are on my client!</h1>
+            <p>
+            My address: <a id="my_url" href=""> </a>
+            <p>
+            I get data from: 
+            <a href="{server_url}">{server_url}</a>
+            <p>
+            Here the data:
+            <p>
+            {data}
+            <p>
+            <script>
+                url = window.location.href;
+                document.getElementById("my_url").innerHTML = url;
+                document.getElementById("my_url").href = url
+            </script>
+        </body>
+    </html>
+    """.format(server_url=server_url_data, data=data)
